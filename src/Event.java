@@ -1,12 +1,14 @@
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 public class Event {
     private String title;
     private LocalDate eventDate;
     private Organizer organizer;
-    private ArrayList<Participant> participantList;
+    private List<Participant> participantList;
 
     public Event(String title, LocalDate eventDate, Organizer organizer) {
         this.title = title;
@@ -19,44 +21,32 @@ public class Event {
         participantList.add(p);
     }
 
-    public void getDaysUntilEvent() {
-        long daysBetween = ChronoUnit.DAYS.between(LocalDate.now(), eventDate);
-        if (daysBetween < 0) {
-            System.out.println("Мероприятие '" + title + "' уже прошло.");
-        } else {
-            System.out.println("До мероприятия '" + title + "' осталось дней: " + daysBetween);
-        }
+    public void sortParticipants() {
+        participantList.sort(Comparator.comparing(Person::getLastName));
     }
 
-    public void displayAllParticipants() {
-        System.out.println("\n--- Список всех участников ---");
-        for (Participant p : participantList) {
-            System.out.println(p);
-        }
-    }
-
-    public void findParticipantByName(String searchName) {
+    public void findParticipant(String name) {
         boolean found = false;
         for (Participant p : participantList) {
-            if (p.getFirstName().equalsIgnoreCase(searchName) || p.getLastName().equalsIgnoreCase(searchName)) {
-                System.out.println("Найден участник: " + p);
+            if (p.getFirstName().equalsIgnoreCase(name) || p.getLastName().equalsIgnoreCase(name)) {
+                System.out.println("Found: " + p);
                 found = true;
             }
         }
-        if (!found) System.out.println("Участник с именем \"" + searchName + "\" не найден.");
+        if (!found) System.out.println("Not found.");
     }
 
-    public void checkForDuplicates() {
-        System.out.println("\nПроверка списка на дубликаты...");
-        boolean hasDuplicates = false;
-        for (int i = 0; i < participantList.size(); i++) {
-            for (int j = i + 1; j < participantList.size(); j++) {
-                if (participantList.get(i).equals(participantList.get(j))) {
-                    System.out.println("! Внимание: найден дубликат: " + participantList.get(i));
-                    hasDuplicates = true;
-                }
-            }
+    public void getDaysUntilEvent() {
+        long daysBetween = ChronoUnit.DAYS.between(LocalDate.now(), eventDate);
+        System.out.println("Days until " + title + ": " + (daysBetween < 0 ? "Expired" : daysBetween));
+    }
+
+    public void displayInfo() {
+        System.out.println("\nEvent: " + title);
+        organizer.displayRole();
+        System.out.println("Participants:");
+        for (Participant p : participantList) {
+            System.out.println("- " + p);
         }
-        if (!hasDuplicates) System.out.println("Дубликатов не обнаружено.");
     }
 }
