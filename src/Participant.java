@@ -8,6 +8,8 @@ public class Participant extends Person {
         this.email = email;
     }
 
+    public String getEmail() { return email; }
+
     @Override
     public void displayRole() {
         System.out.println("Role: Participant, Email: " + email);

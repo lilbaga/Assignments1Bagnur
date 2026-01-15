@@ -8,6 +8,8 @@ public class Organizer extends Person {
         this.department = department;
     }
 
+    public String getDepartment() { return department; }
+
     @Override
     public void displayRole() {
         System.out.println("Role: Organizer, Dept: " + department);

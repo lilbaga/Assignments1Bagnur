@@ -6,47 +6,34 @@ import java.util.List;
 
 public class Event {
     private String title;
-    private LocalDate eventDate;
+    private LocalDate date;
     private Organizer organizer;
-    private List<Participant> participantList;
+    private List<Participant> participants;
 
-    public Event(String title, LocalDate eventDate, Organizer organizer) {
+    public Event(String title, LocalDate date, Organizer organizer) {
         this.title = title;
-        this.eventDate = eventDate;
+        this.date = date;
         this.organizer = organizer;
-        this.participantList = new ArrayList<>();
+        this.participants = new ArrayList<>();
     }
 
     public void addParticipant(Participant p) {
-        participantList.add(p);
-    }
-
-    public void sortParticipants() {
-        participantList.sort(Comparator.comparing(Person::getLastName));
-    }
-
-    public void findParticipant(String name) {
-        boolean found = false;
-        for (Participant p : participantList) {
-            if (p.getFirstName().equalsIgnoreCase(name) || p.getLastName().equalsIgnoreCase(name)) {
-                System.out.println("Found: " + p);
-                found = true;
-            }
-        }
-        if (!found) System.out.println("Not found.");
+        participants.add(p);
     }
 
     public void getDaysUntilEvent() {
-        long daysBetween = ChronoUnit.DAYS.between(LocalDate.now(), eventDate);
-        System.out.println("Days until " + title + ": " + (daysBetween < 0 ? "Expired" : daysBetween));
+        long days = ChronoUnit.DAYS.between(LocalDate.now(), date);
+        System.out.println("Days until " + title + ": " + days);
+    }
+
+    public void sortParticipants() {
+        participants.sort(Comparator.comparing(Person::getLastName));
     }
 
     public void displayInfo() {
-        System.out.println("\nEvent: " + title);
-        organizer.displayRole();
-        System.out.println("Participants:");
-        for (Participant p : participantList) {
-            System.out.println("- " + p);
+        System.out.println("Event: " + title + " | Organizer: " + organizer);
+        for (Participant p : participants) {
+            p.displayRole();
         }
     }
 }
